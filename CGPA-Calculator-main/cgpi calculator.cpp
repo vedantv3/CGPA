@@ -5,10 +5,10 @@ class InputGrades  // base class
 {
 protected:
     string subjects[100];
-    string grade[100];
+    int gradePoints[100];  // Changed from string grade to int gradePoints
+    string letterGrades[100];  // To store the corresponding letter grades
     int NumofSubjects;
     int cred[100];
-    int marks[100];
 public:
     void input();
     void display();
@@ -23,22 +23,29 @@ void InputGrades::input()        // Function to input number of subjects, grades
     {
         cout << "Enter subject Name" << endl;
         cin >> subjects[i];
-        cout << "Enter Grades obtained" << endl;
-        cin >> grade[i];
+        cout << "Enter Grade Points obtained (0-10)" << endl;
+        cin >> gradePoints[i];
         cout << "Enter Credits for the subjects" << endl;
         cin >> cred[i];
+
+        // Assign corresponding letter grade based on grade points
+        if (gradePoints[i] == 10) { letterGrades[i] = "AA"; }
+        else if (gradePoints[i] == 9) { letterGrades[i] = "AB"; }
+        else if (gradePoints[i] == 8) { letterGrades[i] = "BB"; }
+        else if (gradePoints[i] == 7) { letterGrades[i] = "BC"; }
+        else if (gradePoints[i] == 6) { letterGrades[i] = "CC"; }
+        else if (gradePoints[i] == 5) { letterGrades[i] = "CD"; }
+        else { letterGrades[i] = "F"; }  // Assuming any grade point less than 5 is a fail (F)
     }
 }
 
 void InputGrades::display()      // Function to display the inputted parameters
 {
-    cout << setw(8) << "Subjects" << setw(10) << "||" << setw(8) << "Grades" << "    " << setw(7) << "||" << setw(9) << "Credits" << endl;
-    cout << "------------------------------------------------------------------------------";
-    cout << endl;
+    cout << setw(12) << left << "Subjects" << setw(22) << left << "||" << setw(15) << left << "Grade Points" << "||" << setw(10) << left << "Credits" << endl;
+    cout << "----------------------------------------------------------" << endl;
     for (int i = 0; i < NumofSubjects; i++)
     {
-        cout << setw(8) << subjects[i] << "        " << "||" << " " << setw(8) << grade[i] << "        " << setw(3) << "|| " << setw(8) << cred[i];
-        cout << endl;
+        cout << setw(12) << left << subjects[i] << setw(22) << left << "||" << setw(15) << left << gradePoints[i] << "||" << setw(10) << left << cred[i] << endl;
     }
     cout << endl;
 }
@@ -51,38 +58,15 @@ public:
     void pointerPercentage();
 };
 
-void Cgpi::displaygrades()  // Function to convert inputted grades to marks
+void Cgpi::displaygrades()  // Function to display grades and convert to grade points
 {
-    cout << setw(8) << "Subjects" << setw(10) << "||" << setw(8) << "Grades" << setw(11) << "||" << setw(8) << "Marks" << setw(7) << "||" << setw(8) << "Credits" << endl;
-    cout << "-----------------------------------------------------------------------------------";
-    cout << endl;
+    cout << setw(12) << left << "Subjects" << setw(22) << left << "||" << setw(18) << left << "Letter Grades" << "||" << setw(15) << left << "Grade Points" << "||" << setw(10) << left << "Credits" << endl;
+    cout << "--------------------------------------------------------------------------------" << endl;
     for (int i = 0; i < NumofSubjects; i++)
     {
-        if (grade[i] == "AA") { marks[i] = 10; }
-        else if (grade[i] == "AB") { marks[i] = 9; }
-        else if (grade[i] == "BB") { marks[i] = 8; }
-        else if (grade[i] == "BC") { marks[i] = 7; }
-        else if (grade[i] == "CC") { marks[i] = 6; }
-        else if (grade[i] == "CD") { marks[i] = 5; }
-        else
-        {
-            // Check if the grade is numeric
-            try {
-                int num_grade = stoi(grade[i]);
-                if (num_grade >= 0 && num_grade <= 10) {
-                    marks[i] = num_grade;
-                }
-                else {
-                    marks[i] = 0;
-                }
-            }
-            catch (invalid_argument&) {
-                marks[i] = 0;
-            }
-        }
-
-        cout << setw(8) << subjects[i] << "        " << "||" << " " << setw(8) << grade[i] << "        " << "||" << setw(8) << marks[i] << "     " << "|| " << setw(8) << cred[i] << endl;
+        cout << setw(12) << left << subjects[i] << setw(22) << left << "||" << setw(18) << left << letterGrades[i] << "||" << setw(15) << left << gradePoints[i] << "||" << setw(10) << left << cred[i] << endl;
     }
+    cout << endl;
 }
 
 int Cgpi::compute()    // Function to compute total grade points
@@ -90,7 +74,7 @@ int Cgpi::compute()    // Function to compute total grade points
     int totalGradePoints = 0;
     for (int i = 0; i < NumofSubjects; i++)
     {
-        totalGradePoints += (marks[i] * cred[i]);
+        totalGradePoints += (gradePoints[i] * cred[i]);
     }
     return totalGradePoints;
 }
